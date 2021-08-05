@@ -1,0 +1,1151 @@
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="shortcut icon" href="images/icon.png">
+<title>5-minutes RPG</title>
+<style>
+    body{
+        background: #808080;
+        font-family: sans-serif;
+    }
+    .action_button {
+    border: 5px solid #698E34FF;
+    background: #90C446FF;
+    border-radius: 5px;
+    color: #38432DFF;
+    font-size: 35px;
+    transition: 1s;
+    }
+    .shop_button {
+    border: 5px solid #70503AFF;
+    background: rgb(95, 59, 35);
+    border-radius: 5px;
+    color: rgb(66, 37, 17);
+    font-size: 35px;
+    transition: 1s;
+    }
+    .stat_text {
+    font-weight:bold;
+    }
+    A:visited {color: rgb(66, 37, 17);}
+    A:active {color: rgb(66, 37, 17);}
+</style>
+<div style="background: linear-gradient(#3C7373FF, #558DDEFF, #74BAEAFF, #CFB690FF, #b67c74FF, #845A78FF, #555461FF, #746658FF, #6B7B89FF, #939388FF, #4C4138FF, #70503AFF, #BC5F4EFF, #CE9148FF, #E4DA6CFF, #90C446FF, #698E34FF, #4D613CFF, #26323CFF, #2C4B73FF); visibility: hidden;"></div>
+</head>	
+<body>
+<img id="background1" style="background: url(images/background/background_map.png); border:15px rgb(112, 80, 58) solid; height: 720px; background-size: cover; width: 1020px;">
+    <img id="block" src="images/lvl1_guy.png" style="width: 120px; height: 320px; position: absolute; left:150px; top:243px; background-size: cover; z-index:2;">
+    <img id="block1" src="images/monsters/monster1.png" style="width: 150px; height: 220px; position: absolute; left:650px; background-size: cover;">
+
+<div id="button_block" style="position: absolute; left:10px; padding: 15px; top:750px; margin: 15px; display: none;">
+<input onclick="attack()" class="action_button" value="Attack!" type="button">
+<input onclick="potion()" class="action_button" value="Drink a potion!" type="button">
+<input onclick="use_ability()" class="action_button" value="Use the ability!" type="button" id="use_1">
+<input onclick="exit()" class="action_button" value="Leave the battle" type="button">
+</div>
+
+<div id="stats" style="position: absolute; left:1050px; top:0px; background: rgb(112, 80, 58); margin: 15px; padding: 15px; z-index:1; color:#432B18FF; border:5px solid rgb(78, 34, 13)">
+<a class="stat_text">Damage: </a><a id="your_damage_text">15</a><br>
+<a class="stat_text">Defense: </a><a id="your_defense_text">10</a><a>%</a><br>
+<a class="stat_text">Health: </a><a id="your_health_text">100</a><br>
+<a class="stat_text">Coins: </a><a id="your_money_text">100</a><br>
+</div>
+
+<div id="shop_block" style="display: none;">
+  <input onclick="shop_buy1()" class="shop_button" value="50 coins" type="button" style="position: absolute; left:140px; top:266px;" id="product_shop1">
+  <input onclick="shop_buy2()" class="shop_button" value="50 coins" type="button" style="position: absolute; left:447px; top:266px;" id="product_shop2">
+  <input onclick="shop_buy3()" class="shop_button" value="50 coins" type="button" style="position: absolute; left:765px; top:266px;" id="product_shop3">
+  <input onclick="shop_buy4()" class="shop_button" value="75 coins" type="button" style="position: absolute; left:140px; top:595px;" id="product_shop4">
+  <input onclick="shop_buy5()" class="shop_button" value="75 coins" type="button" style="position: absolute; left:457px; top:595px;" id="product_shop5">
+  <input onclick="shop_buy6()" class="shop_button" value="75 coins" type="button" style="position: absolute; left:775px; top:595px;" id="product_shop6">
+</div>
+<div id="castle_block" style="display: none;">
+  <input onclick="castle_buy1()" class="shop_button" value="200 coins" type="button" style="position: absolute; left:130px; top:266px;" id="product_castle1">
+  <input onclick="castle_buy2()" class="shop_button" value="300 coins" type="button" style="position: absolute; left:447px; top:266px;" id="product_castle2">
+  <input onclick="castle_buy3()" class="shop_button" value="400 coins" type="button" style="position: absolute; left:765px; top:266px;" id="product_castle3">
+  <input onclick="castle_buy4()" class="shop_button" value="150 coins" type="button" style="position: absolute; left:130px; top:595px;" id="product_castle4">
+  <input onclick="castle_buy5()" class="shop_button" value="350 coins" type="button" style="position: absolute; left:447px; top:595px;" id="product_castle5">
+  <input onclick="castle_buy6()" class="shop_button" value="100 coins" type="button" style="position: absolute; left:765px; top:595px;" id="product_castle6">
+</div>
+<div id="stats1" style="position: absolute; left:1050px; top:120px; background: rgb(112, 80, 58); margin: 15px; padding: 15px; z-index:1; color:#432B18FF; border:5px solid rgb(78, 34, 13)">
+  <a class="stat_text">Enemy damage: </a><a id="enemy_damage_text">10</a><br>
+  <a class="stat_text">Enemy defense: </a><a id="enemy_defense_text">5</a><a>%</a><br>
+  <a class="stat_text">Enemy health: </a><a id="enemy_health_text">10</a><br>
+</div>
+<div id="stats2" style="position: absolute; left:1050px; top:230px; background: rgb(112, 80, 58); margin: 15px; padding: 15px; z-index:1; color:#432B18FF; border:5px solid rgb(78, 34, 13); display: none;">
+  <a class="stat_text" id="description"></a>
+</div>
+<div id="stats3" style="position: absolute; left:300px; top:250px; background: rgb(112, 80, 58); margin: 15px; padding: 15px; z-index:1; color:#432B18FF; border:5px solid rgb(78, 34, 13); display: none; z-index:2;">
+  <a class="stat_text">Thank you for playing! The game made by <a href="https://vk.com/nizh3">kafkazzer</a></a>
+</div>
+<div id="stats4" style="position: absolute; left:300px; top:250px; background: rgb(112, 80, 58); margin: 15px; padding: 15px; z-index:1; color:#432B18FF; border:5px solid rgb(78, 34, 13); display: none; z-index:1;" onclick="poi()">
+  <img src="images/poison/potion1.png" style="z-index:2; height: 75px; width: 60px; filter:brightness(100%);" onclick="poison1()" onmouseover="description_on7()" onmouseout="description_off()">
+  <img src="images/poison/potion2.png" style="z-index:2; height: 75px; width: 60px;" onclick="poison2()" onmouseover="description_on8()" onmouseout="description_off()">
+  <img src="images/poison/potion3.png" style="z-index:2; height: 75px; width: 60px;" onclick="poison3()" onmouseover="description_on9()" onmouseout="description_off()">
+</div>
+<div id="stats5" style="position: absolute; left:1200px; top:0px; background: rgb(112, 80, 58); margin: 15px; padding: 15px; z-index:1; color:#432B18FF; border:5px solid rgb(78, 34, 13);  z-index:1;" onclick="poi()">
+  <a class="stat_text">Potion health: </a><a id="health_poi_text">0</a><br>
+  <a class="stat_text">Potion defense: </a><a id="defense_poi_text">0</a><br>
+  <a class="stat_text">Potion damage: </a><a id="damage_poi_text">0</a><br>
+</div>
+<img src="images/button.png" style="position: absolute; left:500px; top:580px; z-index:2; height: 50px; width: 50px;" onclick="battle1()" id="button1">
+<img src="images/button.png" style="position: absolute; left:300px; top:480px; z-index:2; height: 50px; width: 50px; visibility: hidden;" onclick="battle2()" id="button2">
+<img src="images/button.png" style="position: absolute; left:335px; top:650px; z-index:2; height: 50px; width: 50px; visibility: hidden;" onclick="shop()" id="shop1">
+<img src="images/button.png" style="position: absolute; left:100px; top:600px; z-index:2; height: 50px; width: 50px; visibility: hidden;" onclick="quests()" id="quests1">
+<img src="images/button.png" style="position: absolute; left:100px; top:400px; z-index:2; height: 50px; width: 50px; visibility: hidden;" onclick="battle3()" id="button3">
+<img src="images/button.png" style="position: absolute; left:150px; top:200px; z-index:2; height: 50px; width: 50px; visibility: hidden;" onclick="battle4()" id="button4">
+<img src="images/button.png" style="position: absolute; left:700px; top:200px; z-index:2; height: 50px; width: 50px; visibility: hidden;" onclick="battle5()" id="button5">
+<img src="images/button.png" style="position: absolute; left:900px; top:170px; z-index:2; height: 50px; width: 50px; visibility: hidden;" onclick="battle6()" id="button6">
+<img src="images/button.png" style="position: absolute; left:785px; top:50px; z-index:2; height: 50px; width: 50px; visibility: hidden;" onclick="battle7()" id="button7">
+<img src="images/button.png" style="position: absolute; left:880px; top:570px; z-index:2; height: 50px; width: 50px; visibility: hidden;" onclick="battle8()" id="button8">
+<img src="images/arrow.png" style="position: absolute; left:50px; top:650px; z-index:2; height: 75px; width: 120px; visibility: hidden;" onclick="exit()" id="leave_shop">
+
+<img src="images/amulet/amulet1.png" style="position: absolute; left:165px; top:150px; z-index:2; height: 100px; width: 100px; visibility: hidden;" onmouseover="description_on1()" onmouseout="description_off()" id="amulet1">
+<img src="images/amulet/amulet2.png" style="position: absolute; left:485px; top:150px; z-index:2; height: 100px; width: 100px; visibility: hidden;" onmouseover="description_on2()" onmouseout="description_off()" id="amulet2">
+<img src="images/amulet/amulet3.png" style="position: absolute; left:805px; top:150px; z-index:2; height: 100px; width: 100px; visibility: hidden;" onmouseover="description_on3()" onmouseout="description_off()" id="amulet3">
+
+<img src="images/ability/abitity1.png" style="position: absolute; left:150px; top:450px; z-index:2; height: 130px; width: 130px; visibility: hidden;" onmouseover="description_on4()" onmouseout="description_off()" id="abitity1">
+<img src="images/ability/abitity2.png" style="position: absolute; left:470px; top:450px; z-index:2; height: 130px; width: 130px; visibility: hidden;" onmouseover="description_on5()" onmouseout="description_off()" id="abitity2">
+<img src="images/ability/abitity3.png" style="position: absolute; left:790px; top:450px; z-index:2; height: 130px; width: 130px; visibility: hidden;" onmouseover="description_on6()" onmouseout="description_off()" id="abitity3">
+
+<img src="images/poison/potion1.png" style="position: absolute; left:160px; top:120px; z-index:2; height: 150px; width: 110px; visibility: hidden;" onmouseover="description_on7()" onmouseout="description_off()" id="poison1">
+<img src="images/poison/potion2.png" style="position: absolute; left:480px; top:120px; z-index:2; height: 150px; width: 110px; visibility: hidden;" onmouseover="description_on8()" onmouseout="description_off()" id="poison2">
+<img src="images/poison/potion3.png" style="position: absolute; left:800px; top:120px; z-index:2; height: 150px; width: 110px; visibility: hidden;" onmouseover="description_on9()" onmouseout="description_off()" id="poison3">
+
+<img src="images/stast/stats_up1.png" style="position: absolute; left:150px; top:450px; z-index:2; height: 130px; width: 130px; visibility: hidden;" onmouseover="description_on10()" onmouseout="description_off()" id="stats_up1">
+<img src="images/stast/stats_up2.png" style="position: absolute; left:470px; top:450px; z-index:2; height: 130px; width: 130px; visibility: hidden;" onmouseover="description_on11()" onmouseout="description_off()" id="stats_up2">
+<img src="images/stast/stats_up3.png" style="position: absolute; left:790px; top:450px; z-index:2; height: 130px; width: 130px; visibility: hidden;" onmouseover="description_on12()" onmouseout="description_off()" id="stats_up3">
+</body>
+<script>
+    let i = 150;
+    let i1 = 650;
+    let calculation = 0;
+    let n_monster = 1; //1
+    let nn_monster = 1;
+    let x = 5;
+    let x1 = 5;
+    let lvl_complite = 1; //1
+    let late = 0;
+    let multiplier_shop = 0;
+    let multiplier_shop1 = 0;
+    let multiplier_shop2 = 0;
+    let farm = 0;
+    let spread = 25;
+    let x_stats1 = 0;
+    let x_stats2 = 0;
+    let x_stats3 = 0;
+    let r_monster = 0;
+    let wait_ability = 0;
+    let wait_ability1 = 0;
+    let wait_ability2 = 0;
+    let save_defense = 0;
+    let quantity_poison1 = 0;
+    let quantity_poison2 = 0;
+    let quantity_poison3 = 0;
+    let action_poi3 = 0;
+    let action_poi2 = 0;
+    let what_ability =0;
+    let buy_abl =0;
+    let buy_abl1 =0;
+    let buy_abl2 =0;
+    let amylet1 = 0;
+    let amylet2 = 0;
+    let amylet3 = 0;
+  	let bust = 0;
+     
+    let your_damage = 15; //15
+    let your_defense = 10;
+    let your_health = 100;
+    let your_money = 100;
+    
+    let enemy_damage = 10;
+    let enemy_defense = 5;
+    let enemy_health = 10;
+    
+    let bb = document.getElementById("block");
+    let bb1 = document.getElementById("block1");
+    let st = document.getElementById("stats1");
+    let st_id = document.getElementById("stats2");
+    let st1_id = document.getElementById("stats3");
+    let st2_id = document.getElementById("stats4");
+    let bt = document.getElementById("button_block");
+    let cb = document.getElementById("castle_block");
+    let sb = document.getElementById("shop_block");
+    let back = document.getElementById("background1");
+    let use_1_id = document.getElementById("use_1");
+    let description_id = document.getElementById("description");
+
+    let your_damage_id = document.getElementById("your_damage_text");
+    let your_defense_id = document.getElementById("your_defense_text");
+    let your_health_id = document.getElementById("your_health_text");
+    let your_money_id = document.getElementById("your_money_text");
+
+    let enemy_damage_id = document.getElementById("enemy_damage_text");
+    let enemy_health_id = document.getElementById("enemy_health_text");
+    let enemy_defense_id = document.getElementById("enemy_defense_text");
+
+    let health_poi_id = document.getElementById("health_poi_text");
+    let defense_poi_id = document.getElementById("defense_poi_text");
+    let damage_poi_id = document.getElementById("damage_poi_text")
+
+    let button1_id = document.getElementById("button1");
+    let button2_id = document.getElementById("button2");
+    let button3_id = document.getElementById("button3");
+    let button4_id = document.getElementById("button4");
+    let button5_id = document.getElementById("button5");
+    let button6_id = document.getElementById("button6");
+    let button7_id = document.getElementById("button7");
+    let button8_id = document.getElementById("button8");
+    let quests_id = document.getElementById("quests1");
+    let shop_id = document.getElementById("shop1");
+    let leave_shop_id = document.getElementById("leave_shop");
+
+    let amulet1_id = document.getElementById("amulet1");
+    let amulet2_id = document.getElementById("amulet2");
+    let amulet3_id = document.getElementById("amulet3");
+
+    let abitity1_id = document.getElementById("abitity1");
+    let abitity2_id = document.getElementById("abitity2");
+    let abitity3_id = document.getElementById("abitity3");
+
+    let poison1_id = document.getElementById("poison1");
+    let poison2_id = document.getElementById("poison2");
+    let poison3_id = document.getElementById("poison3");
+
+    let stats_up1_id = document.getElementById("stats_up1");
+    let stats_up2_id = document.getElementById("stats_up2");
+    let stats_up3_id = document.getElementById("stats_up3");
+
+    let product_shop1_id = document.getElementById("product_shop1");
+    let product_shop2_id = document.getElementById("product_shop2");
+    let product_shop3_id = document.getElementById("product_shop3");
+    let product_shop4_id = document.getElementById("product_shop4");
+    let product_shop5_id = document.getElementById("product_shop5");
+    let product_shop6_id = document.getElementById("product_shop6");
+
+    let product_castle1_id = document.getElementById("product_castle1");
+    let product_castle2_id = document.getElementById("product_castle2");
+    let product_castle3_id = document.getElementById("product_castle3");
+    let product_castle4_id = document.getElementById("product_castle4");
+    let product_castle5_id = document.getElementById("product_castle5");
+    let product_castle6_id = document.getElementById("product_castle6");
+
+    let date1 = new Date();
+	  let dateMON = date1.getMonth();
+	  let dateDAT = date1.getDate();
+	  if(dateMON == 11){
+	  bb.style.width = "100px";
+	  bb.src = "images/egg1_guy.png";
+    }
+	  if(dateMON == 8 && dateDAT == 31){
+	  bb.src = "images/egg2_guy.png";
+	  bb.style.width = "100px";
+    }
+function func() {      
+   setTimeout(function gg1() {   
+    bb.style.left = i; 
+      i=i+2;                   
+      if (i < 650) {  //до куда    
+        func();
+      }                      
+   }, 1)
+   if(i == 648){ //стоп
+    fun1();
+    wait_ability--;
+    wait_ability1--;
+    wait_ability2--;
+    if(wait_ability <= 0){
+    wait_ability = 0;
+    }
+    if(wait_ability1 <= 0){
+    wait_ability1 = 0;
+    }
+    if(wait_ability2 <= 0){
+    wait_ability2 = 0;
+    }
+	if(amulet2 == 1){
+	bust=5;
+	}
+	if(amulet3 == 1){
+	your_health = your_health+10;
+	your_health_id.innerHTML = Math.round(your_health);
+	}
+    calculation = your_damage/100 * enemy_defense - bust;
+    enemy_health = enemy_health - your_damage + calculation; 
+    enemy_health_id.innerHTML= Math.round (enemy_health);
+    if(enemy_health<=0){ //смерть моба
+    if(farm==1){
+    farming();
+    nn_monster++;
+    }
+    else{
+    n_monster++;
+    x=x+5;
+    random_monster();
+    late =0;
+    enemy_health_id.innerHTML= enemy_health = 10 + x;
+    your_money = your_money + getRandomInRange(10, spread);
+    your_money_id.innerHTML= Math.round(your_money);
+    if(n_monster==3){
+    enemy_damage = 13;
+    enemy_damage_id.innerHTML = enemy_damage;
+    }
+    if(n_monster==4){ // lvl1
+    late =0;
+    lvl_complite = 2;
+    exit();
+    n_monster++;
+    button1_id.src = "images/button1.png";
+    }
+    if(n_monster==5){
+    enemy_damage = 15;
+    enemy_damage_id.innerHTML = enemy_damage;
+    }
+    if(n_monster==8){ // lvl2
+    late =0;
+    lvl_complite = 3;
+    exit();
+    n_monster++;
+    button2_id.src = "images/button1.png";
+    }
+    if(n_monster==11){
+    enemy_damage = 20;
+    enemy_damage_id.innerHTML = enemy_damage;
+    }
+    if(n_monster==12){ // lvl3
+    lvl_complite = 4;
+    exit();
+    late =0;
+    n_monster++;
+    button3_id.src = "images/button1.png";
+    }
+    if(n_monster==15){
+    enemy_damage = 23;
+    enemy_damage_id.innerHTML = enemy_damage;
+    }
+    if(n_monster==16){ // lvl4
+    late =0;
+    lvl_complite = 5;
+    exit();
+    button5_id.src = "images/button1.png";
+    }
+
+    if(n_monster==19){
+    enemy_damage = 25;
+    enemy_damage_id.innerHTML = enemy_damage;
+    }
+    if(n_monster==20){ // lvl5
+    late =0;
+    lvl_complite = 6;
+    exit();
+    button6_id.src = "images/button1.png";
+    }
+
+    if(n_monster==22){
+    enemy_damage = 27;
+    enemy_damage_id.innerHTML = enemy_damage;
+    }
+    if(n_monster==24){ // lvl6
+    late = 0;
+    lvl_complite = 7;
+    exit();
+    button7_id.src = "images/button1.png";
+    }
+    
+    if(n_monster==26){ //boss
+    late = 0;
+    lvl_complite = 8;
+    exit();
+    button8_id.src = "images/button1.png";
+    }
+
+    }
+    }
+    else{
+    setTimeout(monster_animation, 1500);
+    }
+   }
+}
+function fun1() {      
+   setTimeout(function gg() {  
+    bb.style.left = i; 
+      i=i-2;
+      if (i > 150) {       
+        fun1();         
+      }                      
+   }, 1)
+}
+
+function monster_animation1() {      
+   setTimeout(function gg2() {   
+    bb1.style.left = i1; 
+      i1=i1+2;                   
+      if (i1 < 650) {  //до куда    
+        monster_animation1();
+      }                      
+   }, 1)
+   if(i1 == 648){
+  late = 0;
+  if(wait_ability == 2 || wait_ability == 1){
+  your_defense = save_defense;
+  your_defense_id.innerHTML = your_defense;
+  }
+  }
+}
+function monster_animation() {      
+   setTimeout(function gg3() {  
+    bb1.style.left = i1; 
+      i1=i1-2;
+      if (i1 > 150) {       
+        monster_animation();         
+      }                      
+   }, 1)
+   if(i1 == 152){ //стоп
+    monster_animation1();
+    if(0 >= your_health){
+    }
+    else{
+    calculation = enemy_damage/100 * your_defense;
+    your_health = your_health - enemy_damage + calculation;
+    your_health_id.innerHTML=Math.round (your_health);
+    }
+    if(0 >= your_health){ //смерть меня
+    your_money = your_money/100 * 90;
+    your_money_id.innerHTML= Math.round(your_money);
+    late = 0;
+    exit();
+    }
+   }
+}
+
+function attack() {
+  if(late == 0){
+    func();
+    late = 1;
+  }
+}
+
+function getRandomInRange(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+getRandomInRange(10, 15);
+function battle1(){
+  if(lvl_complite ==1){
+  vis();
+  back.src = 'images/background/background__lvl1.png'; 
+  your_health = 100;
+  your_health_id.innerHTML = your_health;
+  random_monster();
+  n_monster =1;
+}
+else{
+
+}
+}
+function battle2(){
+  if(lvl_complite ==2){
+  vis();
+  back.src = 'images/background/background__lvl1.png';
+  your_health = 100 + multiplier_shop;
+  your_health_id.innerHTML = your_health;
+  your_damage = 15 + multiplier_shop2;
+  your_damage_id.innerHTML = your_damage;
+  your_defense = 10 + multiplier_shop1;
+  your_defense_id.innerHTML = your_defense;
+  random_monster();
+  n_monster=5;
+}
+else{
+
+}
+}
+function battle3(){
+  if(lvl_complite ==3){
+  vis();
+  back.src = 'images/background/background__lvl1.png';
+  your_health = 100 + multiplier_shop;
+  your_health_id.innerHTML = your_health;
+  your_damage = 15 + multiplier_shop2;
+  your_damage_id.innerHTML = your_damage;
+  your_defense = 10 + multiplier_shop1;
+  your_defense_id.innerHTML = your_defense;
+  random_monster();
+  enemy_damage = 15;
+  enemy_defense = 10;
+  enemy_health = 30;
+  enemy_damage_id.innerHTML = enemy_damage;
+  enemy_health_id.innerHTML = enemy_health;
+  enemy_defense_id.innerHTML = enemy_defense;
+  n_monster=9;
+}
+else{
+
+}
+}
+function battle4(){
+  if(lvl_complite >= 3){
+  enemy_health_id.innerHTML= enemy_health = 30 + x1;
+  vis();
+  farm = 1;
+  back.src = 'images/background/background__lvl1.png';
+  your_health = 100 + multiplier_shop;
+  your_health_id.innerHTML = your_health;
+  random_monster();
+}
+else{
+
+}
+}
+function battle5(){
+  if(lvl_complite ==4){
+
+  vis();
+  back.src = 'images/background/background__lvl2.png';
+  your_health = 100 + multiplier_shop;
+  your_health_id.innerHTML = your_health;
+  your_damage = 15 + multiplier_shop2;
+  your_damage_id.innerHTML = your_damage;
+  your_defense = 10 + multiplier_shop1;
+  your_defense_id.innerHTML = your_defense;
+  random_monster();
+  enemy_damage = 20;
+  enemy_defense = 13;
+  enemy_health = 10 + x;
+  enemy_damage_id.innerHTML = enemy_damage;
+  enemy_health_id.innerHTML = enemy_health;
+  enemy_defense_id.innerHTML = enemy_defense;
+  n_monster=13;
+}
+else{
+
+}
+}
+function battle6(){
+  if(lvl_complite ==5){
+  vis();
+  back.src = 'images/background/background__lvl2.png';
+  your_health = 100 + multiplier_shop;
+  your_health_id.innerHTML = your_health;
+  your_damage = 15 + multiplier_shop2;
+  your_damage_id.innerHTML = your_damage;
+  your_defense = 10 + multiplier_shop1;
+  your_defense_id.innerHTML = your_defense;
+  random_monster();
+  enemy_damage = 20;
+  enemy_defense = 15;
+  enemy_health = 10 + x;
+  enemy_damage_id.innerHTML = enemy_damage;
+  enemy_health_id.innerHTML = enemy_health;
+  enemy_defense_id.innerHTML = enemy_defense;
+  n_monster= 17;
+}
+else{
+
+}
+}
+function battle7(){
+  if(lvl_complite == 6){
+  vis();
+  back.src = 'images/background/background__lvl2.png';
+  your_health = 100 + multiplier_shop;
+  your_health_id.innerHTML = your_health;
+  your_damage = 15 + multiplier_shop2;
+  your_damage_id.innerHTML = your_damage;
+  your_defense = 10 + multiplier_shop1;
+  your_defense_id.innerHTML = your_defense;
+  random_monster();
+  enemy_damage = 20;
+  enemy_defense = 20;
+  enemy_health = 10 + x;
+  enemy_damage_id.innerHTML = enemy_damage;
+  enemy_health_id.innerHTML = enemy_health;
+  enemy_defense_id.innerHTML = enemy_defense;
+  n_monster= 21;
+}
+else{
+
+}
+}
+function battle8(){
+  if(lvl_complite == 7){
+  vis();
+  back.src = 'images/background/background__lvl3.png';
+  your_health = 100 + multiplier_shop;
+  your_health_id.innerHTML = your_health;
+  your_damage = 15 + multiplier_shop2;
+  your_damage_id.innerHTML = your_damage;
+  your_defense = 10 + multiplier_shop1;
+  your_defense_id.innerHTML = your_defense;
+  bb1.src = "images/monsters/boss.png";
+  bb1.style.width = '120px';
+  bb1.style.height = '320px'; 
+  bb1.style.top = '243px';
+  n_monster=25;
+  enemy_damage = 35;
+  enemy_defense = 35;
+  enemy_health = 50 + x;
+  enemy_damage_id.innerHTML = enemy_damage;
+  enemy_health_id.innerHTML = enemy_health;
+  enemy_defense_id.innerHTML = enemy_defense;
+  n_monster= 25;
+}
+else{
+
+}
+}
+function use_ability(){
+  if(what_ability == 1){
+  use_ability1();
+  }
+  if(what_ability == 2){
+  use_ability2();
+  }
+  if(what_ability == 3){
+  use_ability3();
+  }
+}
+function use_ability1(){
+  if(late == 0){
+  if(wait_ability == 0){
+  if(amulet1==1){
+  wait_ability = 2;
+  }
+  else {
+  wait_ability = 3;
+  }
+  save_defense = your_defense;
+  your_defense = 100;
+  your_defense_id.innerHTML = your_defense;
+  }
+  }
+}
+
+function use_ability2(){
+  if(late == 0){
+  if(wait_ability1 == 0){
+  if(amulet1==1){
+  wait_ability1 = 2;
+  }
+  else {
+  wait_ability1 = 3;
+  }
+  your_health = your_health + your_damage;
+  your_health_id.innerHTML = your_health;
+  }
+  }
+}
+
+function use_ability3(){
+  if(late == 0){
+    if(your_money >=50){
+  if(wait_ability2 == 0){
+  if(amulet1==1){
+  wait_ability2 = 2;
+  }
+  else {
+  wait_ability2 = 3;
+  }
+  your_defense =  Math.round(getRandomInRange(0, 100));
+  your_damage =  Math.round(getRandomInRange(0, 25));
+  your_health =  Math.round(getRandomInRange(0, 150)) + multiplier_shop;
+  your_money = your_money-50;
+  your_money_id.innerHTML = your_money;
+  your_damage_id.innerHTML = your_damage;
+  your_defense_id.innerHTML = your_defense;
+  your_health_id.innerHTML = your_health;
+  }
+  }
+  }
+}
+function vis(){
+  bb1.style.visibility = "visible";
+  bb.style.visibility = "visible";
+  bt.style.display = "inline";
+  button1_id.style.visibility = "hidden";
+  button2_id.style.visibility = "hidden";
+  button3_id.style.visibility = "hidden";
+  button4_id.style.visibility = "hidden";
+  button5_id.style.visibility = "hidden";
+  button6_id.style.visibility = "hidden";
+  button7_id.style.visibility = "hidden";
+  button8_id.style.visibility = "hidden";
+  shop_id.style.visibility = "hidden";
+  quests_id.style.visibility = "hidden";
+}
+function shop(){
+  back.src = 'images/background/background_shop.png';
+  vis();
+  bb1.style.visibility = "hidden";
+  bb.style.visibility = "hidden";
+  bt.style.display = "none";
+  leave_shop_id.style.visibility = "visible";
+  
+  stats_up1_id.style.visibility = "visible";
+  stats_up2_id.style.visibility = "visible";
+  stats_up3_id.style.visibility = "visible";
+
+  poison1_id.style.visibility = "visible";
+  poison2_id.style.visibility = "visible";
+  poison3_id.style.visibility = "visible";
+  sb.style.display = "inline";
+}
+function quests(){
+  back.src = 'images/background/background_castle.png';
+  vis();
+  bb1.style.visibility = "hidden";
+  bb.style.visibility = "hidden";
+  bt.style.display = "none";
+  leave_shop_id.style.visibility = "visible";
+  amulet1_id.style.visibility = "visible";
+  amulet2_id.style.visibility = "visible";
+  amulet3_id.style.visibility = "visible";
+
+  abitity1_id.style.visibility = "visible";
+  abitity2_id.style.visibility = "visible";
+  abitity3_id.style.visibility = "visible";
+  cb.style.display = "inline";
+}
+function exit(){
+  if(late == 0){
+  wait_ability = 0;
+  wait_ability1 = 0;
+  wait_ability2 = 0;
+  nn_monster=1;
+  if(action_poi2 == 1){
+    action_poi2 = 0;
+    your_defense = your_defense -10;
+    your_defense_id.innerHTML = your_defense;
+  }
+  if(action_poi3 == 1){
+    action_poi3 = 0;
+    your_damage = your_damage -10;
+    your_damage_id.innerHTML = your_damage;
+  }
+  bb1.style.visibility = "hidden";
+  bb.style.visibility = "hidden";
+  bt.style.display = "none";
+  leave_shop_id.style.visibility = "hidden";
+  back.src = 'images/background/background_map.png';
+  button1_id.style.visibility = "visible";
+  amulet1_id.style.visibility = "hidden";
+  amulet2_id.style.visibility = "hidden";
+  amulet3_id.style.visibility = "hidden";
+  abitity1_id.style.visibility = "hidden";
+  abitity2_id.style.visibility = "hidden";
+  abitity3_id.style.visibility = "hidden";
+  stats_up1_id.style.visibility = "hidden";
+  stats_up2_id.style.visibility = "hidden";
+  stats_up3_id.style.visibility = "hidden";
+  poison1_id.style.visibility = "hidden";
+  poison2_id.style.visibility = "hidden";
+  poison3_id.style.visibility = "hidden";
+  cb.style.display = "none";
+  sb.style.display = "none";
+  if(farm==1){
+  farm=0;
+  }
+  if(lvl_complite == 1){
+  x=5;
+  enemy_damage = 10;
+  enemy_defense = 5;
+  enemy_health = 10;
+  enemy_damage_id.innerHTML = enemy_damage;
+  enemy_health_id.innerHTML = enemy_health;
+  enemy_defense_id.innerHTML = enemy_defense;
+  spread = 25;
+  }
+  if(lvl_complite == 2){
+  button2_id.style.visibility = "visible";
+  shop_id.style.visibility = "visible";
+  x=15;
+  spread = 25;
+  enemy_damage = 15;
+  enemy_defense = 10;
+  enemy_health = 30;
+  enemy_damage_id.innerHTML = enemy_damage;
+  enemy_health_id.innerHTML = enemy_health;
+  enemy_defense_id.innerHTML = enemy_defense;
+  }
+  if(lvl_complite == 3){
+  x=30;
+  spread = 25;
+  button2_id.style.visibility = "visible";
+  button3_id.style.visibility = "visible";
+  button4_id.style.visibility = "visible";
+  shop_id.style.visibility = "visible";
+  quests_id.style.visibility = "visible";
+  enemy_damage = 15;
+  enemy_defense = 10;
+  enemy_health = 30;
+  enemy_damage_id.innerHTML = enemy_damage;
+  enemy_health_id.innerHTML = enemy_health;
+  enemy_defense_id.innerHTML = enemy_defense;
+  }
+  if(lvl_complite == 4){
+  x=45;
+  spread = 30;
+  button2_id.style.visibility = "visible";
+  button3_id.style.visibility = "visible";
+  button4_id.style.visibility = "visible";
+  button5_id.style.visibility = "visible";
+  shop_id.style.visibility = "visible";
+  quests_id.style.visibility = "visible";
+  enemy_damage = 20;
+  enemy_defense = 12;
+  enemy_health = 45;
+  enemy_damage_id.innerHTML = enemy_damage;
+  enemy_health_id.innerHTML = enemy_health;
+  enemy_defense_id.innerHTML = enemy_defense;
+  }
+  if(lvl_complite == 5){
+  x=60;
+  spread = 30;
+  button2_id.style.visibility = "visible";
+  button3_id.style.visibility = "visible";
+  button4_id.style.visibility = "visible";
+  button5_id.style.visibility = "visible";
+  button6_id.style.visibility = "visible";
+  shop_id.style.visibility = "visible";
+  quests_id.style.visibility = "visible";
+  enemy_damage = 20;
+  enemy_defense = 12;
+  enemy_health = 45;
+  enemy_damage_id.innerHTML = enemy_damage;
+  enemy_health_id.innerHTML = enemy_health;
+  enemy_defense_id.innerHTML = enemy_defense;
+  }
+  if(lvl_complite == 6){
+  x=75;
+  spread = 35;
+  button2_id.style.visibility = "visible";
+  button3_id.style.visibility = "visible";
+  button4_id.style.visibility = "visible";
+  button5_id.style.visibility = "visible";
+  button6_id.style.visibility = "visible";
+  button7_id.style.visibility = "visible";
+  shop_id.style.visibility = "visible";
+  quests_id.style.visibility = "visible";
+  enemy_damage = 20;
+  enemy_defense = 15;
+  enemy_health = 60;
+  enemy_damage_id.innerHTML = enemy_damage;
+  enemy_health_id.innerHTML = enemy_health;
+  enemy_defense_id.innerHTML = enemy_defense;
+  }
+  if(lvl_complite == 7){
+  x=90;
+  spread = 40;
+  button2_id.style.visibility = "visible";
+  button3_id.style.visibility = "visible";
+  button4_id.style.visibility = "visible";
+  button5_id.style.visibility = "visible";
+  button6_id.style.visibility = "visible";
+  button7_id.style.visibility = "visible";
+  button8_id.style.visibility = "visible";
+  shop_id.style.visibility = "visible";
+  quests_id.style.visibility = "visible";
+  enemy_damage = 20;
+  enemy_defense = 15;
+  enemy_health = 60;
+  enemy_damage_id.innerHTML = enemy_damage;
+  enemy_health_id.innerHTML = enemy_health;
+  enemy_defense_id.innerHTML = enemy_defense;
+  }
+  if(lvl_complite == 8){
+  x=90;
+  st1_id.style.display = "inline";
+  button2_id.style.visibility = "visible";
+  button3_id.style.visibility = "visible";
+  button4_id.style.visibility = "visible";
+  button5_id.style.visibility = "visible";
+  button6_id.style.visibility = "visible";
+  button7_id.style.visibility = "visible";
+  button8_id.style.visibility = "visible";
+  shop_id.style.visibility = "visible";
+  quests_id.style.visibility = "visible";
+  enemy_damage = 0;
+  enemy_defense = 0;
+  enemy_health = 0;
+  enemy_damage_id.innerHTML = enemy_damage;
+  enemy_health_id.innerHTML = enemy_health;
+  enemy_defense_id.innerHTML = enemy_defense;
+  }
+}
+}
+function farming(){
+    if(nn_monster==1){
+      spread = 35;
+    random_monster();
+    late =0;
+    x1=x1+5;
+    enemy_health_id.innerHTML= enemy_health = 10 + x1;
+    your_money = your_money + getRandomInRange(15, 20);
+    your_money_id.innerHTML= Math.round(your_money);
+    nn_monster++;
+    }
+    if(nn_monster==2){
+    random_monster();
+    late =0;
+    x1=x1+5;
+    enemy_health_id.innerHTML= enemy_health = 10 + x1;
+    your_money = your_money + getRandomInRange(15, 20);
+    your_money_id.innerHTML= Math.round(your_money);
+    }
+    if(nn_monster==3){
+    random_monster();
+    x1=x1+5;
+    enemy_damage = 20;
+    enemy_damage_id.innerHTML = enemy_damage;
+    late =0;
+    enemy_health_id.innerHTML= enemy_health = 10 + x1;
+    your_money = your_money + getRandomInRange(15, 20);
+    your_money_id.innerHTML= Math.round(your_money);
+    }
+    if(nn_monster==4){
+    late =0;
+    farm=0;
+    exit();
+    x1=5;
+    nn_monster=1;
+    your_money = your_money + getRandomInRange(15, 20);
+    your_money_id.innerHTML= Math.round(your_money);
+    }
+
+}
+function castle_buy1(){
+  if(amulet1 != 1){
+if(your_money>=200){
+your_money=your_money-200;
+your_money_id.innerHTML = Math.round(your_money);
+amulet1 = 1;
+product_castle1_id.value = "Sell";
+}
+}
+}
+function castle_buy2(){
+  if(amulet2 != 1){
+if(your_money>=300){
+your_money=your_money-300;
+your_money_id.innerHTML = Math.round(your_money);
+amulet2 = 1;
+product_castle2_id.value = "Sell";
+}
+}
+}
+function castle_buy3(){
+  if(amulet3 != 1){
+if(your_money>=400){
+your_money=your_money-400;
+your_money_id.innerHTML = Math.round(your_money);
+amulet3 = 1;
+product_castle3_id.value = "Sell";
+}
+}
+}
+function castle_buy4(){
+if(your_money>=150){
+your_money=your_money-150;
+your_money_id.innerHTML = Math.round(your_money);
+what_ability = 1;
+buy_abl =1;
+product_castle4_id.value = "To take";
+}
+}
+function castle_buy5(){
+if(your_money>=250){
+your_money=your_money-250;
+your_money_id.innerHTML = Math.round(your_money);
+what_ability = 2;
+buy_abl1 =1;
+product_castle5_id.value = "To take";
+}
+}
+function castle_buy6(){
+if(your_money>=100){
+your_money=your_money-100;
+your_money_id.innerHTML = Math.round(your_money);
+what_ability = 3;
+buy_abl2 =1;
+product_castle6_id.value = "To take";
+}
+}
+function shop_buy1(){
+if(your_money>=50){
+your_money=your_money-50;
+your_money_id.innerHTML = Math.round(your_money);
+quantity_poison1++;
+health_poi_id.innerHTML = quantity_poison1;
+}
+}
+function shop_buy2(){
+if(your_money>=50){
+your_money=your_money-50;
+your_money_id.innerHTML = Math.round(your_money);
+quantity_poison2++;
+defense_poi_id.innerHTML = quantity_poison2;
+}
+}
+function shop_buy3(){
+if(your_money>=50){
+your_money=your_money-50;
+your_money_id.innerHTML = Math.round(your_money);
+quantity_poison3++;
+damage_poi_id.innerHTML = quantity_poison3;
+}
+}
+function shop_buy4(){
+if(your_money>=75+x_stats1){
+your_money=your_money-(75+x_stats1);
+x_stats1 = x_stats1 +10;
+multiplier_shop1 = multiplier_shop1 +5;
+your_defense=your_defense+ 5;
+your_defense_id.innerHTML = Math.round(your_defense);
+your_money_id.innerHTML = Math.round(your_money);
+product_shop4_id.value=75+x_stats1 + ' coins';
+}
+}
+
+function shop_buy5(){
+if(your_money>=75+x_stats2){
+your_money=your_money-(75+x_stats2);
+x_stats2 = x_stats2 +10;
+multiplier_shop2 = multiplier_shop2 +5;
+your_damage=your_damage+ 5;
+your_damage_id.innerHTML = Math.round(your_damage);
+your_money_id.innerHTML = Math.round(your_money);
+product_shop5_id.value=75+x_stats2 + ' coins';
+}
+}
+
+function shop_buy6(){
+if(your_money>=75+x_stats3){
+your_money=your_money-(75+x_stats3);
+x_stats3 = x_stats3 +10;
+multiplier_shop=multiplier_shop+5;
+your_health_id.innerHTML = Math.round(your_health) + multiplier_shop;
+your_money_id.innerHTML = Math.round(your_money);
+product_shop6_id.value=75+x_stats3 + ' coins';
+}
+}
+
+function random_monster(){
+  r_monster = getRandomInRange(1, 21);
+  r_monster = Math.round(r_monster);
+  if(r_monster == 1){bb1.src = "images/monsters/monster1.png"; bb1.style.width = '120px'; bb1.style.height = '200px'; bb1.style.top = '243px';}
+  if(r_monster == 2){bb1.src = "images/monsters/monster2.png"; bb1.style.width = '120px'; bb1.style.height = '200px'; bb1.style.top = '243px';}
+  if(r_monster == 3){bb1.src = "images/monsters/monster3.png"; bb1.style.width = '120px'; bb1.style.height = '200px'; bb1.style.top = '243px';}
+
+  if(r_monster == 4){bb1.src = "images/monsters/monster4.png"; bb1.style.width = '200px'; bb1.style.height = '250px'; bb1.style.top = '313px';}
+  if(r_monster == 5){bb1.src = "images/monsters/monster5.png"; bb1.style.width = '200px'; bb1.style.height = '250px'; bb1.style.top = '313px';}
+  if(r_monster == 6){bb1.src = "images/monsters/monster6.png"; bb1.style.width = '200px'; bb1.style.height = '250px'; bb1.style.top = '313px';}
+
+  if(r_monster == 7){bb1.src = "images/monsters/monster7.png"; bb1.style.width = '200px'; bb1.style.height = '220px'; bb1.style.top = '343px';}
+  if(r_monster == 8){bb1.src = "images/monsters/monster8.png"; bb1.style.width = '200px'; bb1.style.height = '220px'; bb1.style.top = '343px';}
+  if(r_monster == 9){bb1.src = "images/monsters/monster9.png"; bb1.style.width = '200px'; bb1.style.height = '220px'; bb1.style.top = '343px';}
+
+  if(r_monster == 10){bb1.src = "images/monsters/monster10.png"; bb1.style.width = '200px'; bb1.style.height = '320px'; bb1.style.top = '243px';}
+  if(r_monster == 11){bb1.src = "images/monsters/monster11.png"; bb1.style.width = '200px'; bb1.style.height = '320px'; bb1.style.top = '243px';}
+  if(r_monster == 12){bb1.src = "images/monsters/monster12.png"; bb1.style.width = '200px'; bb1.style.height = '320px'; bb1.style.top = '243px';}
+
+  if(r_monster == 13){bb1.src = "images/monsters/monster13.png"; bb1.style.width = '200px'; bb1.style.height = '220px'; bb1.style.top = '343px';}
+  if(r_monster == 14){bb1.src = "images/monsters/monster14.png"; bb1.style.width = '200px'; bb1.style.height = '220px'; bb1.style.top = '343px';}
+  if(r_monster == 15){bb1.src = "images/monsters/monster15.png"; bb1.style.width = '200px'; bb1.style.height = '220px'; bb1.style.top = '343px';}
+
+  if(r_monster == 16){bb1.src = "images/monsters/monster16.png"; bb1.style.width = '160px'; bb1.style.height = '220px'; bb1.style.top = '343px';}
+  if(r_monster == 17){bb1.src = "images/monsters/monster17.png"; bb1.style.width = '160px'; bb1.style.height = '220px'; bb1.style.top = '343px';}
+  if(r_monster == 18){bb1.src = "images/monsters/monster18.png"; bb1.style.width = '160px'; bb1.style.height = '220px'; bb1.style.top = '343px';}
+
+  if(r_monster == 19){bb1.src = "images/monsters/monster19.png"; bb1.style.width = '120px'; bb1.style.height = '320px'; bb1.style.top = '243px';}
+  if(r_monster == 20){bb1.src = "images/monsters/monster20.png"; bb1.style.width = '120px'; bb1.style.height = '320px'; bb1.style.top = '243px';}
+  if(r_monster == 21){bb1.src = "images/monsters/monster21.png"; bb1.style.width = '120px'; bb1.style.height = '320px'; bb1.style.top = '243px';}
+}
+
+function description_on1(){
+description_id.innerHTML = "Accelerates the ability action by 1 turn. When purchased, it is valid until the end of the game.";
+st_id.style.display ="inline";
+}
+function description_on2(){
+description_id.innerHTML = "Reduces the opponent's defense by 5. When purchased, it is valid until the end of the game.";
+st_id.style.display ="inline";
+}
+function description_on3(){
+description_id.innerHTML = "When you attack, you treat 10 health. When purchased, it is valid until the end of the game.";
+st_id.style.display ="inline";
+}
+function description_on4(){
+description_id.innerHTML = "Increases your defense to 100 for 1 turn. Сooldown 3 moves.";
+st_id.style.display ="inline";
+}
+function description_on5(){
+description_id.innerHTML = "Heals you based on your damage rate. Сooldown 3 moves.";
+st_id.style.display ="inline";
+}
+function description_on6(){
+description_id.innerHTML = "ABSOLUTE MADNESS. By chance the value of your characteristics, but it will cost you 50 coins. Сooldown 3 moves.";
+st_id.style.display ="inline";
+}
+
+function description_on7(){
+description_id.innerHTML = "In battle, you can heal 30 health.";
+st_id.style.display ="inline";
+}
+function description_on8(){
+description_id.innerHTML = "For 1 turn in battle, you can increase defense by 10.";
+st_id.style.display ="inline";
+}
+function description_on9(){
+description_id.innerHTML = "For 1 turn in battle, you can increase your damage by 10.";
+st_id.style.display ="inline";
+}
+function description_on10(){
+description_id.innerHTML = "Permanently increases protection by 5.";
+st_id.style.display ="inline";
+}
+function description_on11(){
+description_id.innerHTML = "Permanently increases damage by 5.";
+st_id.style.display ="inline";
+}
+function description_on12(){
+description_id.innerHTML = "Permanently increases lives by 5.";
+st_id.style.display ="inline";
+}
+function description_off(){
+st_id.style.display ="none";
+}
+function poi(){
+  st2_id.style.display ="none";
+}
+function potion(){
+  if(late == 0){
+  st2_id.style.display ="inline";
+}
+}
+function poison1(){
+  if(quantity_poison1 >= 1){
+  your_health = your_health+30;
+  your_health_id.innerHTML = Math.round(your_health);
+  quantity_poison1--;
+  health_poi_id.innerHTML = quantity_poison1;
+  }
+}
+function poison2(){
+  if(quantity_poison2 >= 1 && action_poi2 == 0){
+  your_defense = your_defense+10;
+  your_defense_id.innerHTML = Math.round(your_defense);
+  quantity_poison2--;
+  action_poi2 = 1;
+  defense_poi_id.innerHTML = quantity_poison2;
+  }
+}
+function poison3(){
+  if(quantity_poison3 >= 1 && action_poi3 == 0){
+  your_damage = your_damage+10;
+  your_damage_id.innerHTML = Math.round(your_damage);
+  quantity_poison3--;
+  action_poi3 = 1;
+  damage_poi_id.innerHTML = quantity_poison3;
+  }
+}
+exit();
+</script>
+</html>
